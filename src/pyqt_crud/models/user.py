@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
+from pydantic.dataclasses import dataclass
+from typing import Text
 
-
-from dataclasses import dataclass
-from typing import Optional, Text
+from pydantic import validator
 
 
 @dataclass
@@ -10,39 +9,13 @@ class User:
     username: Text
     password: Text
 
+    @validator('username')
+    def username_alnum(cls, value: Text):
+        assert value.isalnum(), 'Username must be alphanumeric.'
+        return value
 
-def create_table(connection):
-    with connection.cursor() as cursor:
-        query = """CREATE TABLE IF NOT EXISTS `user` (
-            username VARCHAR(21) NOT NULL,
-            password VARCHAR(24) NOT NULL
-        )"""
-        cursor.execute(query)
-        connection.commit()
-
-
-def fetch(username: Text, password: Text, connection) -> Optional[User]:
-    with connection.cursor() as cursor:
-        query = """SELECT username
-        FROM `user`
-        WHERE username = ? AND password = ?"""
-        cursor.execute(query, (username, password))
-        return cursor.fetchone()
-
-
-def insert(user: User, connection) -> User:
-    """Creates an user in the database
-
-    Args:
-        connection (IDb): db2 compliant connection.
-        user (User): User information
-
-    Returns:
-        user (User): Created user
-    """
-    with connection.cursor() as cursor:
-        query = """INSERT INTO `users` (username, password) VALUES (?, ?)"""
-        res = cursor.insert(query, (user.username, user.password))
-        print(res)
-        connection.commit()
-        return user
+    @validator('username')
+    def username_size(cls, value: Text):
+        assert len(value) >= 8, 'Username should have at least 8 characters'
+        assert len(value) <= 24, 'Username should have maximum 24 characters'
+        return value
