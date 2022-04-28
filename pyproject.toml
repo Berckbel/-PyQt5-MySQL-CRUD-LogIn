@@ -19,7 +19,7 @@ isort = "^5.10.1"
 bandit = "^1.7.4"
 flake8 = "^4.0.1"
 pytest = "^7.1.1"
-hypothesis = {extras = ["zoneinfo"], version = "^6.43.3"}
+hypothesis = {extras = ["zoneinfo"], version = "^6.45.1"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
