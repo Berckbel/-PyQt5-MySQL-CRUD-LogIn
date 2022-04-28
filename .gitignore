@@ -1,0 +1,15 @@
+.idea
+*.log
+.vscode/
+.DS_Store
+
+*.py[cowd]
+
+tmp/
+dist/
+.tox/
+build/
+*.egg/
+htmlcov/
+.mypy_cache/
+.pytest_cache/

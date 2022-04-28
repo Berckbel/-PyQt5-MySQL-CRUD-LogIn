@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "pyqt_crud"
+version = "0.1.0"
+description = "Simple example of PyQt Crud with SQL Database"
+authors = ["Erick G. Islas-Osuna <erickisos653@gmail.com>"]
+packages = [
+    { include = "pyqt_crud", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+PySide6 = "^6.3.0"
+
+[tool.poetry.dev-dependencies]
+tox = "^3.25.0"
+mypy = "^0.942"
+black = "^22.3.0"
+isort = "^5.10.1"
+bandit = "^1.7.4"
+flake8 = "^4.0.1"
+pytest = "^7.1.1"
+hypothesis = {extras = ["zoneinfo"], version = "^6.43.3"}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length=79
+skip-string-normalization = true
+target-version=['py39']
+preview = true
+exclude = '''
+/(
+    /.git
+  | /.mypy_cache
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true

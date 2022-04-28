@@ -1,0 +1,78 @@
+on:
+  push:
+    branches-ignore:
+      - "main"
+
+jobs:
+  lint:
+    name: Check linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v7
+      - id: cache
+        name: Restoring cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('pyproject.toml') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: Install dependencies
+        run: poetry install
+      - name: Check codestyle with flake8
+        run: poetry run flake8 tests src
+      - name: Check format with black
+        run: poetry run black --check tests src
+  type-check:
+    name: Run type checking
+    needs:
+      - "lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v7
+      - id: cache
+        name: Restoring cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('pyproject.toml') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: Install dependencies
+        run: poetry update
+      - name: Check type hinting with mypy
+        run: poetry run mypy tests src
+  test:
+    name: Execute tests
+    needs:
+      - "lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Set up Poetry
+        uses: Gr1N/setup-poetry@v7
+      - id: cache
+        name: Restoring cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: ${{ runner.os }}-poetry-${{ hashFiles('pyproject.toml') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: Install dependencies
+        run: poetry update
+      - name: Check type hinting with mypy
+        run: poetry run tox
