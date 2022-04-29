@@ -4,7 +4,7 @@
 from typing import Text
 from decimal import Decimal
 
-from dataclasses import dataclass
+from pydantic.dataclasses import dataclass
 
 
 @dataclass

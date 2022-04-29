@@ -11,5 +11,6 @@ dist/
 build/
 *.egg/
 htmlcov/
+.hypothesis/
 .mypy_cache/
 .pytest_cache/
